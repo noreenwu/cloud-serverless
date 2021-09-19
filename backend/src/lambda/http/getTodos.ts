@@ -1,9 +1,9 @@
 
 import { APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler } from 'aws-lambda'
 import 'source-map-support/register'
-// import * as AWS from 'aws-sdk'
+import * as AWS from 'aws-sdk'
 
-// const docClient = new AWS.DynamoDB.DocumentClient();
+const docClient = new AWS.DynamoDB.DocumentClient();
 const todosTable = process.env.TODOS_TABLE
 
 
@@ -24,9 +24,9 @@ const todosTable = process.env.TODOS_TABLE
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   console.log("processing event ", event)
 
-  // const result = await docClient.scan({
-  //   TableName: todosTable
-  // }).promise()
+  const result = await docClient.scan({
+    TableName: todosTable
+  }).promise()
 
   // var params = {
   //   TableName : 'Todos'
@@ -36,7 +36,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
   //   if (err) console.log(err);
   //   else console.log(data);
   // });
-  // console.log("and the result was: ", result);
+  console.log("and the result was: ", result);
   
   return {
     statusCode: 200,
@@ -48,6 +48,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
         message: "Hello: Your function executed successfully!",
         input: event,
         table: todosTable,
+        items: result.Items
       },
     ),
   };
