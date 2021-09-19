@@ -38,10 +38,10 @@ resources:
       Type: AWS::DynamoDB::Table
       Properties:
         AttributeDefinitions:
-          - AttributeName: todoId
-            AttributeType: S
           - AttributeName: createdAt
-            AttributeType: S            
+            AttributeType: S         
+          - AttributeName: todoId
+            AttributeType: S           
           # - AttributeName: name
           #   AttributeType: S            
           # - AttributeName: dueDate
