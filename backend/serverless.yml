@@ -9,7 +9,7 @@ provider:
   name: aws
   runtime: nodejs12.x
 
-  stage: ${opt:stage, 'dev-v4'}
+  stage: ${opt:stage, 'dev-v5'}
   region: ${opt:region, 'us-east-1'}
 
   environment:
@@ -34,34 +34,18 @@ functions:
 
 resources:
   Resources:
-    TodosDynamoDBTableFour:
+    TodosTable:
       Type: AWS::DynamoDB::Table
       Properties:
         AttributeDefinitions:
-          - AttributeName: createdAt
+          - AttributeName: userId
             AttributeType: S         
           - AttributeName: todoId
-            AttributeType: S           
-          # - AttributeName: name
-          #   AttributeType: S            
-          # - AttributeName: dueDate
-          #   AttributeType: S            
-          # - AttributeName: done
-          #   AttributeType: B     
-          # - AttributeName: attachmentUrl
-          #   AttributeType: S       
+            AttributeType: S            
         KeySchema:
-          - AttributeName: createdAt
+          - AttributeName: userId
             KeyType: HASH
           - AttributeName: todoId
-            KeyType: RANGE            
-          # - AttributeName: name
-          #   KeyType: HASH
-          # - AttributeName: dueDate
-          #   KeyType: HASH
-          # - AttributeName: done
-          #   KeyType: HASH
-          # - AttributeName: attachmentUrl
-          #   KeyType: HASH
+            KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
         TableName: ${self:provider.environment.TODOS_TABLE}
