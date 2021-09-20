@@ -8,6 +8,11 @@ const AWS = require('aws-sdk')
 const docClient = new AWS.DynamoDB.DocumentClient();
 const todosTable = process.env.TODOS_TABLE
 
+const getDateTimeNow = () => {
+  const d = new Date();
+  return d.toString();
+}
+
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
 
   const newTodo: CreateTodoRequest = JSON.parse(event.body)
@@ -16,7 +21,9 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
 
   const newItem = {
     todoId: itemId,
-    ...newTodo
+    ...newTodo,
+    done: false,
+    createdAt: getDateTimeNow()
   }
 
   await docClient.put({
