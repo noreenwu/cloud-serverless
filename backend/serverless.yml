@@ -9,7 +9,7 @@ provider:
   name: aws
   runtime: nodejs12.x
 
-  stage: ${opt:stage, 'dev-v5'}
+  stage: ${opt:stage, 'dev-v6'}
   region: ${opt:region, 'us-east-1'}
 
   environment:
@@ -20,7 +20,7 @@ provider:
       Action:
         - dynamodb:Scan
         - dynamodb:PutItem
-
+        - dynamodb:DeleteItem
       Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
 
 functions:
@@ -39,6 +39,17 @@ functions:
           method: get
           path: todos
           cors: true
+
+  DeleteTodo:
+    handler: src/lambda/http/deleteTodo.handler
+    events:
+      - http:
+          method: delete
+          path: todos/{todoId}
+          request:
+            parameters:
+              paths:
+                todoId: true
 
 resources:
   Resources:
