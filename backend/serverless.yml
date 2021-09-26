@@ -46,6 +46,7 @@ functions:
       - http:
           method: delete
           path: todos/{todoId}
+          cors: true
           request:
             parameters:
               paths:
