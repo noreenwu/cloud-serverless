@@ -23,35 +23,9 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
 
   console.log("delete todo id is ", todoId)
 
-
   const ret = await deleteTodo(todoId, "1")
 
   console.log("return value from deleteTodo was ", ret)
-
-  // var params = {
-  //   TableName: todosTable,
-  //   Key: {
-  //     "userId": 1,
-  //     "todoId": todoId
-  //   }
-  // }
-  // docClient.delete(params, function(err, data) {
-  //   if (err) {
-  //     console.error("unable to delete item", JSON.stringify(err, null, 2))      
-  //   }
-  //   else {
-  //     console.log("DeleteItem succeeded", JSON.stringify(data, null, 2))
-  //   }
-  // })
-
-  // const result = await docClient.delete({
-  //   TableName: todosTable,
-  //   Keys: [{
-  //     userId: 1,
-  //     todoId: todoId
-  //   }]
-  // }).promise()
-
 
   return {
     statusCode: 200,
