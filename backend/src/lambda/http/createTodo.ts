@@ -13,23 +13,44 @@ const getDateTimeNow = () => {
   return d.toString();
 }
 
-export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-
-  const newTodo: CreateTodoRequest = JSON.parse(event.body)
-  console.log("newTodo: ", newTodo)
-  const itemId = uuid.v4();
-
+const createTodo = async(newTodo: CreateTodoRequest) => {
   const newItem = {
-    todoId: itemId,
+    todoId : uuid.v4(),
     ...newTodo,
     done: false,
     createdAt: getDateTimeNow()
   }
 
-  await docClient.put({
+  const createTodo = await docClient.put({
     TableName: todosTable,
     Item: newItem
-  }).promise()
+  }).promise();
+
+  console.log("createTodo Put completed", createTodo)
+
+  return { newItem }
+}
+
+export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+
+  const newTodo: CreateTodoRequest = JSON.parse(event.body)
+  console.log("newTodo: ", newTodo)
+
+  const ret = await createTodo(newTodo)
+  // const itemId = uuid.v4();
+
+  // const newItem = {
+  //   todoId: itemId,
+  //   ...newTodo,
+  //   done: false,
+  //   createdAt: getDateTimeNow()
+  // }
+
+  // await docClient.put({
+  //   TableName: todosTable,
+  //   Item: newItem
+  // }).promise()
+  console.log("created the todo...")
 
   return {
     statusCode: 201,
@@ -37,7 +58,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
       'Access-Control-Allow-Origin': '*'
     },
     body: JSON.stringify({
-        newItem
+        ret
     })
   }
 }
