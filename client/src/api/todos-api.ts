@@ -21,13 +21,15 @@ export async function createTodo(
   idToken: string,
   newTodo: CreateTodoRequest
 ): Promise<Todo> {
+  console.log("async function createTodo about to POST newTodo", newTodo)
   const response = await Axios.post(`${apiEndpoint}/todos`,  JSON.stringify(newTodo), {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${idToken}`
     }
   })
-  return response.data.item
+  console.log("and the response from Axios.post was: ", response.data.newItem)
+  return response.data.newItem
 }
 
 export async function patchTodo(
