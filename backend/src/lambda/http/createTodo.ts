@@ -15,6 +15,7 @@ const getDateTimeNow = () => {
 
 const createTodo = async(newTodo: CreateTodoRequest) => {
   const newItem = {
+    userId: "1",
     todoId : uuid.v4(),
     ...newTodo,
     done: false,
@@ -50,7 +51,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
   //   TableName: todosTable,
   //   Item: newItem
   // }).promise()
-  console.log("created the todo...")
+  console.log("created the todo...", ret)
 
   return {
     statusCode: 201,
@@ -58,7 +59,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
       'Access-Control-Allow-Origin': '*'
     },
     body: JSON.stringify({
-        ret
+        ...ret
     })
   }
 }

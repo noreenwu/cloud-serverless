@@ -29,6 +29,11 @@ interface TodosState {
   loadingTodos: boolean
 }
 
+const getRandomInt = (max: number) => {
+  return Math.floor(Math.random() * max);
+}
+
+
 export class Todos extends React.PureComponent<TodosProps, TodosState> {
   state: TodosState = {
     todos: [],
@@ -47,16 +52,26 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
   onTodoCreate = async (event: React.ChangeEvent<HTMLButtonElement>) => {
     try {
       const dueDate = this.calculateDueDate()
+      console.log("token is ", this.props.auth.getIdToken())
       const newTodo = await createTodo(this.props.auth.getIdToken(), {
         name: this.state.newTodoName,
         dueDate
-      })
+      }) 
+
       this.setState({
         todos: [...this.state.todos, newTodo],
         newTodoName: ''
       })
-    } catch {
-      alert('Todo creation failed')
+    } catch (e) {
+      if (e instanceof TypeError) {
+        console.log("Type error")
+      }
+      else if (e instanceof EvalError) {
+        console.log("Eval Error")
+      }
+      else {
+        console.log('Todo creation failed')
+      }
     }
   }
 
@@ -97,7 +112,7 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
         loadingTodos: false
       })
     } catch (e) {
-      alert(`Failed to fetch todos: `)
+      console.log('Failed to fetch todos: ', e)
     }
   }
 
