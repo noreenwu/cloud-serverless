@@ -14,6 +14,7 @@ provider:
 
   environment:
     TODOS_TABLE: Todos-${self:provider.stage}
+    AUTH_0_SECRET: VY4vdof1Y-WD27cGG_4fmbbdXrIrXRalTkLE9GeMDjt5uQxvSf2iOSR29qWeg0Fe
 
   iamRoleStatements:
     - Effect: Allow
