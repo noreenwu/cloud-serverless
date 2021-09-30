@@ -20,6 +20,7 @@ provider:
     - Effect: Allow
       Action:
         - dynamodb:Scan
+        - dynamodb:Query
         - dynamodb:PutItem
         - dynamodb:DeleteItem
       Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}

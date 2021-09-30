@@ -4,6 +4,7 @@ import 'source-map-support/register'
 import * as AWS from 'aws-sdk'
 
 const docClient = new AWS.DynamoDB.DocumentClient();
+import { getUserId } from '../utils'
 const todosTable = process.env.TODOS_TABLE
 
 
@@ -22,21 +23,21 @@ const todosTable = process.env.TODOS_TABLE
 //   return response;
 // }
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  console.log("processing event ", event)
 
-  const result = await docClient.scan({
-    TableName: todosTable
-  }).promise()
+  // const result = await docClient.scan({
+  //   TableName: todosTable
+  // }).promise()
+  const userId = getUserId(event)
 
-  // var params = {
-  //   TableName : 'Todos'
-  // };
-
-  // const result = await docClient.scan(params, function(err, data) {
-  //   if (err) console.log(err);
-  //   else console.log(data);
-  // });
-  console.log("and the result was: ", result);
+  const result = await docClient
+    .query({
+      TableName: todosTable,
+      KeyConditionExpression: 'userId = :userId',
+      ExpressionAttributeValues: {
+        ':userId': userId
+      },
+      ScanIndexForward: false
+    }).promise()
   
   return {
     statusCode: 200,
