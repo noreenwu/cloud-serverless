@@ -15,41 +15,30 @@ const getDateTimeNow = () => {
   return d.toString();
 }
 
-const createTodo = async(newTodo: CreateTodoRequest) => {
+const createTodo = async(userId: string, newTodo: CreateTodoRequest) => {
   const newItem = {
-    userId: "1",
+    userId: userId,
     todoId : uuid.v4(),
     ...newTodo,
     done: false,
     createdAt: getDateTimeNow()
   }
 
-  const createTodo = await docClient.put({
+  await docClient.put({
     TableName: todosTable,
     Item: newItem
   }).promise();
-
-  console.log("createTodo Put completed", createTodo)
 
   return { newItem }
 }
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  // const authorization = event.headers.Authorization
-  // const split = authorization.split(' ')
-  // const jwtToken = split[1]
-
-  // console.log("createTodo jwtToken: ", jwtToken)
 
   const userId = getUserId(event)
-  console.log("userId: ", userId)
 
   const newTodo: CreateTodoRequest = JSON.parse(event.body)
-  console.log("newTodo: ", newTodo)
 
-  const ret = await createTodo(newTodo)
-
-  console.log("created the todo...", ret)
+  const ret = await createTodo(userId, newTodo)
 
   return {
     statusCode: 201,
