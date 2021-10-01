@@ -9,12 +9,13 @@ provider:
   name: aws
   runtime: nodejs12.x
 
-  stage: ${opt:stage, 'dev-v6'}
+  stage: ${opt:stage, 'dev-v7'}
   region: ${opt:region, 'us-east-1'}
 
   environment:
     TODOS_TABLE: Todos-${self:provider.stage}
     AUTH_0_SECRET: VY4vdof1Y-WD27cGG_4fmbbdXrIrXRalTkLE9GeMDjt5uQxvSf2iOSR29qWeg0Fe
+    IMAGES_S3_BUCKET: wun1-serverless-todos-images-${self:provider.stage}
 
   iamRoleStatements:
     - Effect: Allow
@@ -71,3 +72,36 @@ resources:
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
         TableName: ${self:provider.environment.TODOS_TABLE}
+
+AttachmentsBucket:
+  Type: AWS::S3::Bucket
+  Properties:
+    BucketName: ${self:provider.environment.IMAGES_S3_BUCKET}
+    CorsConfiguration:
+      CorsRules:
+        -
+          AllowedOrigins:
+            - '*'
+          AllowedHeaders:
+            - '*'
+          AllowedMethods:
+            - GET
+            - PUT
+            - POST
+            - DELETE
+            - HEAD
+          MaxAge: 300
+
+BucketPolicy:
+  Type: AWS::S3::BucketPolicy
+  Properties:
+    PolicyDocument:
+      Id: MyPolicy
+      Version: "2012-10-17"
+      Statement:
+        - Sid: PublicReadForGetBucketObjects
+          Effect: Allow
+          Principal: '*'
+          Action: 's3:GetObject'
+          Resource: 'arn:aws:s3:::${self:provider.environment.IMAGES_S3_BUCKET}/*'
+    Bucket: !Ref AttachmentsBucket
