@@ -27,7 +27,6 @@ provider:
     - Effect: Allow
       Action:
         - s3:PutObject
-        - s3:GetObject
       Resource: arn:aws:s3:::${self:provider.environment.IMAGES_S3_BUCKET}/*
 
 functions:
@@ -53,6 +52,7 @@ functions:
         Action:
           - dynamodb:Query
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+        # Bucket is actually public
       - Effect: Allow
         Action:
           - s3:GetObject
