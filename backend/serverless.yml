@@ -23,7 +23,6 @@ provider:
       Action:
         - dynamodb:Scan
         - dynamodb:Query
-        - dynamodb:PutItem
         - dynamodb:DeleteItem
         - dynamodb:UpdateItem
       Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
@@ -36,6 +35,12 @@ provider:
 functions:
   CreateTodo:
     handler: src/lambda/http/createTodo.handler
+    iamRoleStatementsName: createTodo-role
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:PutItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
     events:
       - http:
           method: post
