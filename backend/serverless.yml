@@ -4,6 +4,7 @@ service:
 plugins:
   - serverless-webpack
   - serverless-iam-roles-per-function
+  - serverless-plugin-tracing
 
 provider:
   name: aws
@@ -12,11 +13,23 @@ provider:
   stage: ${opt:stage, 'dev-v8'}
   region: ${opt:region, 'us-east-1'}
 
+  tracing:
+    lambda: true
+    apiGateway: true
+
   environment:
     TODOS_TABLE: Todos-${self:provider.stage}
     AUTH_0_SECRET: VY4vdof1Y-WD27cGG_4fmbbdXrIrXRalTkLE9GeMDjt5uQxvSf2iOSR29qWeg0Fe
     IMAGES_S3_BUCKET: wun1-serverless-todos-images-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
+
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "xray:PutTraceSegments"
+        - "xray:PutTelemetryRecords"
+      Resource:
+        - "*"
 
 functions:
   CreateTodo:
