@@ -9,13 +9,14 @@ provider:
   name: aws
   runtime: nodejs12.x
 
-  stage: ${opt:stage, 'dev-v7'}
+  stage: ${opt:stage, 'dev-v8'}
   region: ${opt:region, 'us-east-1'}
 
   environment:
     TODOS_TABLE: Todos-${self:provider.stage}
     AUTH_0_SECRET: VY4vdof1Y-WD27cGG_4fmbbdXrIrXRalTkLE9GeMDjt5uQxvSf2iOSR29qWeg0Fe
     IMAGES_S3_BUCKET: wun1-serverless-todos-images-${self:provider.stage}
+    SIGNED_URL_EXPIRATION: 300
 
   iamRoleStatements:
     - Effect: Allow
@@ -25,6 +26,11 @@ provider:
         - dynamodb:PutItem
         - dynamodb:DeleteItem
       Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+        - s3:GetObject
+      Resource: arn:aws:s3:::${self:provider.environment.IMAGES_S3_BUCKET}/*
 
 functions:
   CreateTodo:
@@ -49,6 +55,18 @@ functions:
       - http:
           method: delete
           path: todos/{todoId}
+          cors: true
+          request:
+            parameters:
+              paths:
+                todoId: true
+
+  GenerateUploadUrl:
+    handler: src/lambda/http/generateUploadUrl.handler
+    events:
+      - http:
+          method: post
+          path: todos/{todoId}/attachment
           cors: true
           request:
             parameters:
