@@ -7,12 +7,13 @@ import { EditTodo } from './components/EditTodo'
 import { LogIn } from './components/LogIn'
 import { NotFound } from './components/NotFound'
 import { Todos } from './components/Todos'
-
-export interface AppProps {}
+// import Callback from './components/Callback'
+// import { handleAuthentication } from './auth/Auth'
+// export interface AppProps {}
 
 export interface AppProps {
-  auth: Auth
-  history: any
+  auth: Auth;
+  history: any;
 }
 
 export interface AppState {}
@@ -103,6 +104,14 @@ export default class App extends Component<AppProps, AppState> {
             return <EditTodo {...props} auth={this.props.auth} />
           }}
         />
+
+        {/* <Route
+          path="/callback"
+          render={props => {
+            handleAuthentication(props) 
+            return <Callback />
+          }}
+          /> */}
 
         <Route component={NotFound} />
       </Switch>
