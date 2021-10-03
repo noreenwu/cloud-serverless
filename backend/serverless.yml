@@ -5,6 +5,8 @@ plugins:
   - serverless-webpack
   - serverless-iam-roles-per-function
   - serverless-plugin-tracing
+  - serverless-reqvalidator-plugin
+  - serverless-aws-documentation
 
 provider:
   name: aws
@@ -31,6 +33,18 @@ provider:
       Resource:
         - "*"
 
+custom:
+  documentation:
+    api:
+      info:
+        version: v1.0.0
+        title: Todos API
+        description: Serverless backend for Todos lists
+    models:
+      - name: CreateTodoRequest
+        contentType: application/json
+        schema: ${file(reqmodels/create-todo-request.json)}
+
 functions:
   CreateTodo:
     handler: src/lambda/http/createTodo.handler
@@ -45,6 +59,9 @@ functions:
           method: post
           path: todos
           cors: true
+          request:
+            schema:
+              application/json: ${file(reqmodels/create-todo-request.json)}
 
   GetTodos:
     handler: src/lambda/http/getTodos.handler
