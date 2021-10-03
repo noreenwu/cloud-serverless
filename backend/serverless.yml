@@ -98,6 +98,24 @@ functions:
               paths:
                 todoId: true
 
+  UpdateTodo:
+    handler: src/lambda/http/updateTodo.handler
+    iamRoleStatementsName: updateTodo-role
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:UpdateItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}    
+    events:
+      - http:
+          method: patch
+          path: todos/{todoId}
+          cors: true
+          request:
+            parameters:
+              paths:
+                todoId: true
+
   GenerateUploadUrl:
     handler: src/lambda/http/generateUploadUrl.handler
     iamRoleStatementsName: generateUploadUrl-role
