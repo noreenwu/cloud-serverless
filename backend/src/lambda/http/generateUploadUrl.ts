@@ -1,9 +1,9 @@
 import 'source-map-support/register'
 import { getUserId } from '../utils'
-
-// const uuid = require('uuid');
 const AWS = require('aws-sdk')
+import { createLogger } from '../../utils/logger'
 const todosTable = process.env.TODOS_TABLE
+const logger = createLogger('generateUploadUrl')
 
 const docClient = new AWS.DynamoDB.DocumentClient();
 const s3 = new AWS.S3({
@@ -18,17 +18,14 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler } f
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   const todoId = event.pathParameters.todoId
 
-  // TODO: Return a presigned URL to upload a file for a TODO item with the provided id
   const userId = getUserId(event)
-
-  // const imageId = uuid.v4()
   const url = getUploadUrl(todoId)
 
   console.log("the signed url is: ", url)
   console.log("the userId is: ", userId)
   console.log("the todoId is: ", todoId)
-  
-  // update the DynamoDB entry for this todo
+
+  // update the DynamoDB entry for this todo, with the URL of the image being uploaded
   await docClient.update({
       TableName: todosTable,
       Key: { userId, todoId },
@@ -40,7 +37,13 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     })
   .promise();  
 
+  logger.info('Generated an uploadURL', {
+    userId,
+    todoId,
+    url
+  });
 
+  // Return a presigned URL to upload a file for a TODO item with the provided id
   return {
     statusCode: 201,
     headers: {
