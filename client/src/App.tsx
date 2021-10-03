@@ -105,14 +105,6 @@ export default class App extends Component<AppProps, AppState> {
           }}
         />
 
-        {/* <Route
-          path="/callback"
-          render={props => {
-            handleAuthentication(props) 
-            return <Callback />
-          }}
-          /> */}
-
         <Route component={NotFound} />
       </Switch>
     )
