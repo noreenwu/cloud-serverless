@@ -1,6 +1,5 @@
 import { CustomAuthorizerEvent, CustomAuthorizerResult } from 'aws-lambda'
 import 'source-map-support/register'
-
 // import { verify, decode } from 'jsonwebtoken'
 import { verify,  } from 'jsonwebtoken'
 import { createLogger } from '../../utils/logger'
@@ -76,6 +75,10 @@ function getToken(authHeader: string): string {
 
   const split = authHeader.split(' ')
   const token = split[1]
+
+  logger.info('User was authorized', {
+    key: token
+  });
 
   return token
 }

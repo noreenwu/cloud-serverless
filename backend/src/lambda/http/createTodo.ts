@@ -2,6 +2,7 @@ import 'source-map-support/register'
 const uuid = require('uuid');
 
 import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda'
+import { createLogger } from '../../utils/logger'
 
 import { CreateTodoRequest } from '../../requests/CreateTodoRequest'
 import { getUserId } from '../utils'
@@ -9,6 +10,8 @@ import { getUserId } from '../utils'
 const AWS = require('aws-sdk')
 const docClient = new AWS.DynamoDB.DocumentClient();
 const todosTable = process.env.TODOS_TABLE
+const logger = createLogger('createTodo')
+
 
 const getDateTimeNow = () => {
   const d = new Date();
@@ -28,7 +31,7 @@ const createTodo = async(userId: string, newTodo: CreateTodoRequest) => {
     TableName: todosTable,
     Item: newItem
   }).promise();
-
+  
   return { newItem }
 }
 
@@ -39,6 +42,11 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
   const newTodo: CreateTodoRequest = JSON.parse(event.body)
 
   const ret = await createTodo(userId, newTodo)
+
+  logger.info('Todo was created', {
+    userId,
+    todoId: ret.newItem.todoId
+  });
 
   return {
     statusCode: 201,
