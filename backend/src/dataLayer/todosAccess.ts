@@ -2,8 +2,9 @@
 const AWS = require('aws-sdk')
 import { TodoItem } from '../models/TodoItem'
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
+import { UpdateTodoRequest } from '../requests/UpdateTodoRequest'
 
-export class TodosAccess {
+export class TodoAccess {
 
     constructor(
         private readonly docClient: DocumentClient = new AWS.DynamoDB.DocumentClient(),
@@ -15,19 +16,64 @@ export class TodosAccess {
 
             const result = await this.docClient
                 .query({
-                TableName: this.todosTable,
-                KeyConditionExpression: 'userId = :userId',
-                ExpressionAttributeValues: {
-                    ':userId': userId
+                    TableName: this.todosTable,
+                    KeyConditionExpression: 'userId = :userId',
+                    ExpressionAttributeValues: {
+                        ':userId': userId
                 },
-            ScanIndexForward: false
+                ScanIndexForward: false
             }).promise()
 
             console.log(result)
             const items = result.Items
 
             return items as TodoItem[]
-        }        
+        }
+
+        async createTodo(newTodo: TodoItem): Promise<TodoItem> {
+            await this.docClient.put({
+                TableName: this.todosTable,
+                Item: newTodo
+              }).promise();
+              
+              
+              return newTodo;
+        }
+
+        async deleteTodo(userId: string, todoId: string): Promise<any> {
+            const deleteTodo = await this.docClient.delete({
+                TableName: this.todosTable,
+                Key: { userId, todoId }
+            })
+            .promise();
+
+            console.log("deleted todo ", deleteTodo)
+
+            return  deleteTodo;
+
+        }
+
+        async updateTodo(userId: string, todoId: string, todo: UpdateTodoRequest): Promise<any> {
+            const updatedTodo = await this.docClient.update({
+                TableName: this.todosTable,
+                Key: { userId, todoId },
+                ExpressionAttributeNames: {
+                  '#todo_name': 'name',
+                },
+                ExpressionAttributeValues: {
+                  ':name': todo.name,
+                  ':dueDate': todo.dueDate,
+                  ':done': todo.done,
+                },
+                UpdateExpression: 'SET #todo_name = :name, dueDate = :dueDate, done = :done',
+                ReturnValues: 'ALL_NEW',
+            })
+            .promise();
+            
+            console.log("updated todo", updatedTodo)
+        }
+
+        // async generateUploadUrl(userId: string, todoId: string)
 }
 
 
