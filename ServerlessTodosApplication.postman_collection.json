@@ -1,0 +1,325 @@
+{
+	"info": {
+		"_postman_id": "c4209346-e43d-4c62-a2b3-6fd3d40e25d5",
+		"name": "Serverless Todos Application",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "getTodos",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/todos",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"todos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createTodo",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"practice violin\",\n    \"dueDate\": \"oct-3-2021\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/todos",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"todos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createTodo invalid request body",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"practice violin\",\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/todos",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"todos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteTodo",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{baseUrl}}/todos/:todoId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"todos",
+						":todoId"
+					],
+					"variable": [
+						{
+							"key": "todoId",
+							"value": "668a3995-c3de-4835-8f13-3260629d77d6"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateTodo",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"edited!\",\n    \"dueDate\": \"oct-25\",\n    \"done\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://rwyeixb5mk.execute-api.us-east-1.amazonaws.com/dev-v10/todos/:todoId",
+					"protocol": "https",
+					"host": [
+						"rwyeixb5mk",
+						"execute-api",
+						"us-east-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"dev-v10",
+						"todos",
+						":todoId"
+					],
+					"variable": [
+						{
+							"key": "todoId",
+							"value": "bb39f778-36b2-4e7f-a4de-9496d4a36fa0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateTodo invalid request body",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"edited!\",\n    \"dueDate\": \"oct-25\",\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/todos/:todoId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"todos",
+						":todoId"
+					],
+					"variable": [
+						{
+							"key": "todoId",
+							"value": "bb39f778-36b2-4e7f-a4de-9496d4a36fa0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "presignedUrl",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/todos/:todo/attachment",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"todos",
+						":todo",
+						"attachment"
+					],
+					"variable": [
+						{
+							"key": "todo",
+							"value": "{{presignedTodoId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "authToken",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3d1ZGV2LmF1dGgwLmNvbS8iLCJzdWIiOiJnb29nbGUtb2F1dGgyfDEwMzA1MDM4MTM0OTY5NDIxMDY0MiIsImF1ZCI6IjFyamVMRk5vbWhoQ29hOW5FUDBTS3Q1V0FHaTRzY2lOIiwiaWF0IjoxNjMzMzA5MDUyLCJleHAiOjE2MzM3NDEwNTIsImF0X2hhc2giOiJXb3hVbVhQMWlPWk5QUXFpbDZaT0V3Iiwibm9uY2UiOiJFc1RfbHQyMEVPZm0xajl3fkVlb1ZvWGF3NHdYRkZ-YyJ9.YO8JbBEgkEVAizyrD_SEEn1N8DlIuhDnatA5_Vrp8iE"
+		},
+		{
+			"key": "baseUrl",
+			"value": "https://rwyeixb5mk.execute-api.us-east-1.amazonaws.com/dev-v10"
+		},
+		{
+			"key": "deleteTodoId",
+			"value": "<supply todoId>"
+		},
+		{
+			"key": "updateTodoId",
+			"value": "<supply todoId>"
+		},
+		{
+			"key": "presignedTodoId",
+			"value": "<supply todoId>"
+		}
+	]
+}
