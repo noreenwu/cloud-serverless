@@ -2,11 +2,14 @@ import 'source-map-support/register'
 
 import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda'
 import * as AWS from 'aws-sdk'
+import { createLogger } from '../../utils/logger'
+
 import { UpdateTodoRequest } from '../../requests/UpdateTodoRequest'
 import { getUserId } from '../utils'
 
 const docClient = new AWS.DynamoDB.DocumentClient();
 const todosTable = process.env.TODOS_TABLE
+const logger = createLogger('updateTodos')
 
 
 const updateTodo = async(todoId: string, userId: string, todo: UpdateTodoRequest) => {
@@ -25,6 +28,13 @@ const updateTodo = async(todoId: string, userId: string, todo: UpdateTodoRequest
       ReturnValues: 'ALL_NEW',
   })
   .promise();
+
+  logger.info('Updated specified todo', {
+    userId,
+    todoId,
+    todo
+  });
+
   return { Updated: updatedTodo };
 }
 
@@ -35,7 +45,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
   const userId = getUserId(event)
 
 
-  // TODO: Update a TODO item with the provided id using values in the "updatedTodo" object
+  // This updates a TODO item with the provided todoId using values in the "todoRevision" object
   const ret = await updateTodo(todoId, userId, todoRevision)
 
   return {

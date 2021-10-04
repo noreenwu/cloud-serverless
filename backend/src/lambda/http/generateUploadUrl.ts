@@ -21,10 +21,6 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
   const userId = getUserId(event)
   const url = getUploadUrl(todoId)
 
-  console.log("the signed url is: ", url)
-  console.log("the userId is: ", userId)
-  console.log("the todoId is: ", todoId)
-
   // update the DynamoDB entry for this todo, with the URL of the image being uploaded
   await docClient.update({
       TableName: todosTable,
