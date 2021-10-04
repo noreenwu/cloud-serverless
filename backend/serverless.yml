@@ -10,7 +10,7 @@ provider:
   name: aws
   runtime: nodejs12.x
 
-  stage: ${opt:stage, 'dev-v9'}
+  stage: ${opt:stage, 'dev-v10'}
   region: ${opt:region, 'us-east-1'}
 
   tracing:
@@ -115,6 +115,8 @@ functions:
             parameters:
               paths:
                 todoId: true
+            schema:
+              application/json: ${file(reqmodels/update-todo-request.json)}
 
   GenerateUploadUrl:
     handler: src/lambda/http/generateUploadUrl.handler
