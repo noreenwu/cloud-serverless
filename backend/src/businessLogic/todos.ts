@@ -11,7 +11,7 @@ export async function getAllTodos(userId: string): Promise<TodoItem[]> {
     return todoAccess.getAllTodos(userId)
 }
 
-export async function createGroup(newTodo: CreateTodoRequest, jwtToken: string): Promise<TodoItem> {
+export async function createTodo(newTodo: CreateTodoRequest, jwtToken: string): Promise<TodoItem> {
     const todoId = uuid.v4()
     const userId = parseUserId(jwtToken)
 
