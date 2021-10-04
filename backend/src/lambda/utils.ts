@@ -23,3 +23,12 @@ export function getUserId(event: APIGatewayProxyEvent): string {
   console.log("getUserId: jwtToken is: ", jwtToken)
   return parseUserId(jwtToken)
 }
+
+export function getToken(event: APIGatewayProxyEvent): string {
+
+  const authorization = event.headers.authorization;
+  const split = authorization.split(' ')
+  const jwtToken = split[1]  
+
+  return jwtToken
+}

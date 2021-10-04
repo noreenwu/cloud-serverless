@@ -1,13 +1,11 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler } from 'aws-lambda'
 import 'source-map-support/register'
 import { getAllTodos } from '../../businessLogic/todos'
+import { getToken } from '../utils'
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
 
-    const authorization = event.headers.authorization;
-    const split = authorization.split(' ')
-    const jwtToken = split[1]
-
+    const jwtToken = getToken(event)
     const todos = await getAllTodos(jwtToken)
 
     return {
