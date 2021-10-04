@@ -38,8 +38,8 @@ and deployed to AWS using ```sls deploy -v```
 - DynamoDB database table for ToDos
 - DynamoDB privileges per endpoint
 - the DynamoDB keys and billing mode
+- X-Ray configuration for enhanced logging
 - environment variables
-
 
 
 
