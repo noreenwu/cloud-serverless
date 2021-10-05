@@ -33,7 +33,7 @@ export async function createTodo(newTodo: CreateTodoRequest, jwtToken: string): 
 }
 
 // delete specified Todo for specified user
-export async function deleteTodo(todoId: string, jwtToken: string): Promise<TodoItem> {
+export async function deleteTodo(todoId: string, jwtToken: string): Promise<string> {
 
     const userId = parseUserId(jwtToken)
 
