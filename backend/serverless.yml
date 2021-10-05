@@ -4,13 +4,12 @@ service:
 plugins:
   - serverless-webpack
   - serverless-iam-roles-per-function
-  - serverless-plugin-tracing
 
 provider:
   name: aws
   runtime: nodejs12.x
 
-  stage: ${opt:stage, 'dev-v10'}
+  stage: ${opt:stage, 'dev-v11'}
   region: ${opt:region, 'us-east-1'}
 
   tracing:
