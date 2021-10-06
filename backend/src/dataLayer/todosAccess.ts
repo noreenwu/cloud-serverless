@@ -3,6 +3,8 @@ const AWS = require('aws-sdk')
 import { TodoItem } from '../models/TodoItem'
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import { UpdateTodoRequest } from '../requests/UpdateTodoRequest'
+import { createLogger } from '../utils/logger'
+const logger = createLogger('datalayer')
 
 export class TodoAccess {
 
@@ -12,8 +14,9 @@ export class TodoAccess {
         }
 
         async getAllTodos(userId: string): Promise<TodoItem[]> {
-            console.log("Getting all todos")
-
+            logger.info('getting all Todos for user', {
+                userId
+            }); 
             const result = await this.docClient
                 .query({
                     TableName: this.todosTable,
@@ -24,36 +27,43 @@ export class TodoAccess {
                 ScanIndexForward: false
             }).promise()
 
-            console.log(result)
             const items = result.Items
 
             return items as TodoItem[]
         }
 
         async createTodo(newTodo: TodoItem): Promise<TodoItem> {
+            logger.info('creating a new Todo', {
+                newTodo
+            });              
             await this.docClient.put({
                 TableName: this.todosTable,
                 Item: newTodo
               }).promise();
-              
-              
+                            
               return newTodo;
         }
 
         async deleteTodo(userId: string, todoId: string): Promise<string> {
-            const deletedTodo = await this.docClient.delete({
+            logger.info('deleting specified Todo', {
+                userId,
+                todoId
+            });             
+            await this.docClient.delete({
                 TableName: this.todosTable,
                 Key: { userId, todoId }
             })
             .promise();
 
-            console.log("deleted todo ", todoId)
-            console.log("deleteTodo docClient returned ", deletedTodo)
             return  todoId;
-
         }
 
         async updateTodo(userId: string, todoId: string, todo: UpdateTodoRequest): Promise<any> {
+            logger.info('updating specified Todo with new values', {
+                userId,
+                todoId,
+                todo
+            });            
             const updatedTodo = await this.docClient.update({
                 TableName: this.todosTable,
                 Key: { userId, todoId },
@@ -70,7 +80,6 @@ export class TodoAccess {
             })
             .promise();
             
-            console.log("updated todo", updatedTodo.Attributes)
             const retTodo = { ...updatedTodo.Attributes }
             return retTodo
         }
@@ -78,6 +87,10 @@ export class TodoAccess {
         async getUploadUrl(todoId: string): Promise<string> {
             const bucketName = process.env.IMAGES_S3_BUCKET
             const urlExpiration = parseInt(process.env.SIGNED_URL_EXPIRATION)
+
+            logger.info('Generating an uploadURL', {
+                todoId
+            });
 
             const s3 = new AWS.S3({
                 signatureVersion: 'v4'
@@ -91,6 +104,11 @@ export class TodoAccess {
          }
 
          async updateTodoUploadUrl(userId: string, todoId: string, url: string): Promise<any> {
+            logger.info('Saving uploadURL to TodosTable specified item', {
+                userId,
+                todoId,
+                url
+            });             
             const updated = await this.docClient.update({
                 TableName: this.todosTable,
                 Key: { userId, todoId },
@@ -102,7 +120,6 @@ export class TodoAccess {
             })
             .promise();
 
-            console.log("updateTodoUploadUrl in data layer")
             return updated
         } 
 }
