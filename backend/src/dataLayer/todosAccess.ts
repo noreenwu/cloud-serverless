@@ -71,6 +71,7 @@ export class TodoAccess {
             .promise();
             
             console.log("updated todo", updatedTodo)
+            return updatedTodo
         }
 
         // async generateUploadUrl(userId: string, todoId: string)
