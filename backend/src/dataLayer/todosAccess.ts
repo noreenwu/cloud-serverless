@@ -41,14 +41,14 @@ export class TodoAccess {
         }
 
         async deleteTodo(userId: string, todoId: string): Promise<string> {
-            await this.docClient.delete({
+            const deletedTodo = await this.docClient.delete({
                 TableName: this.todosTable,
                 Key: { userId, todoId }
             })
             .promise();
 
             console.log("deleted todo ", todoId)
-
+            console.log("deleteTodo docClient returned ", deletedTodo)
             return  todoId;
 
         }
@@ -70,11 +70,14 @@ export class TodoAccess {
             })
             .promise();
             
-            console.log("updated todo", updatedTodo)
-            return updatedTodo
+            console.log("updated todo", updatedTodo.Attributes)
+            const retTodo = { ...updatedTodo.Attributes }
+            return retTodo
         }
 
-        // async generateUploadUrl(userId: string, todoId: string)
+        // async generateUploadUrl(userId: string, todoId: string): Promise<any> {
+
+        // }
 }
 
 
