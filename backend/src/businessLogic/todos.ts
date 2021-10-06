@@ -48,3 +48,15 @@ export async function updateTodo(todoId: string, revisedTodo: UpdateTodoRequest,
 
     return todoAccess.updateTodo(userId, todoId, revisedTodo)
 }
+
+// get upload Url
+export async function getUploadUrl(todoId: string): Promise<string> {
+
+    return await todoAccess.getUploadUrl(todoId)
+}
+
+export async function saveUploadUrl(todoId: string, jwtToken: string, url: string): Promise<string> {
+    const userId = parseUserId(jwtToken)
+
+    return await todoAccess.updateTodoUploadUrl(userId, todoId, url)
+}

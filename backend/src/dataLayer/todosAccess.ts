@@ -75,9 +75,36 @@ export class TodoAccess {
             return retTodo
         }
 
-        // async generateUploadUrl(userId: string, todoId: string): Promise<any> {
+        async getUploadUrl(todoId: string): Promise<string> {
+            const bucketName = process.env.IMAGES_S3_BUCKET
+            const urlExpiration = parseInt(process.env.SIGNED_URL_EXPIRATION)
 
-        // }
+            const s3 = new AWS.S3({
+                signatureVersion: 'v4'
+            })
+
+            return s3.getSignedUrl('putObject', {
+                Bucket: bucketName,
+                Key: todoId,
+                Expires: urlExpiration
+            })
+         }
+
+         async updateTodoUploadUrl(userId: string, todoId: string, url: string): Promise<any> {
+            const updated = await this.docClient.update({
+                TableName: this.todosTable,
+                Key: { userId, todoId },
+                UpdateExpression: "set attachmentUrl=:URL",
+                ExpressionAttributeValues: {
+                ":URL": url.split("?")[0]
+                },
+                ReturnValues: "UPDATED_NEW"
+            })
+            .promise();
+
+            console.log("updateTodoUploadUrl in data layer")
+            return updated
+        } 
 }
 
 
